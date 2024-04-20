@@ -4,12 +4,14 @@ import sys
 import stylesheets
 
 
+# creates button with chosen stylesheet
 def set_button(label: str, style: str):
     button = QtWidgets.QPushButton(label)
     button.setStyleSheet(style)
     return button
 
 
+# defines action for each button pressed
 def button_action(button: QtWidgets.QPushButton, action: Calculator,
                   label=False):
     if label:
@@ -52,7 +54,7 @@ button_action(subtract, calc.num_or_operator, True)
 multiply = set_button("*", stylesheets.mathButtons)
 button_action(multiply, calc.num_or_operator, True)
 
-# create number buttons
+# this creates integer buttons and corresponding actions
 integers = []
 for iter in range(10):
     integers.append(set_button(f"{iter}", stylesheets.mainKey))

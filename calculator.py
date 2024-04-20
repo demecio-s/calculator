@@ -16,7 +16,6 @@ class Calculator(QtWidgets.QWidget):
         self.setMinimumSize(300, 300)
         self.setWindowTitle("Calculator")
 
-    # create actions for pushed button events:
     # if an integer is pressed, stack from left to right
     # update label as buttons are pushed (follow (pe)mdas).
     @QtCore.Slot()
@@ -33,8 +32,8 @@ class Calculator(QtWidgets.QWidget):
     def sign_change(self):
         # this is probably unecessary but keeping it for my own clarity
         parsedString = list(self.operands)
+        # checks list backward until it finds "-" or "+"
         for char in range(len(parsedString)-1, -1, -1):
-            # checks list backward until it finds "-" or "+"
             # if negative sign
             if parsedString[char] == "-":
                 # if character before negative is "(", then delete negative
@@ -47,10 +46,11 @@ class Calculator(QtWidgets.QWidget):
                 else:
                     parsedString[char] = "+"
                     break
+            # if adding, subtract instead
             elif parsedString[char] == "+":
-                # if adding, subtract instead
                 parsedString[char] = "-"
                 break
+            # if no signs found, then integer is made negative
             elif char == 0:
                 parsedString.insert(char, '-')
         self.operands = parsedString
@@ -63,11 +63,13 @@ class Calculator(QtWidgets.QWidget):
         catNum = []
         numStart = 0
         for char in range(len(parsedString)-1, -1, -1):
-            # if decimal found, first check for integers before it, once no
-            # integers are found anymore, concatenate
+            # if decimal found, initialize index at which
+            # concatenation will begin
             if parsedString[char] == ".":
                 numStart = char
                 continue
+            # first check for integers before it, once no
+            # integers are found anymore break out of loop
             try:  # char-1
                 checkInt = int(parsedString[char])
                 if char == 0:
@@ -76,12 +78,13 @@ class Calculator(QtWidgets.QWidget):
             except:
                 numStart = char + 1
                 break
+        # concatenate
         for i in range(numStart, len(parsedString)):
             catNum.append(parsedString[i])
         # divide by 100
         catNum = "".join(str(float("".join(catNum))/100))
         catNum = list(catNum)
-        # this is to supress scientiffic notation
+        # lines 87-103 is to supress scientiffic notation
         mag = '0'
         for i in range(len(catNum)):
             if catNum[i] == 'e':
@@ -99,10 +102,12 @@ class Calculator(QtWidgets.QWidget):
             pass
         del parsedString[numStart: len(parsedString)]
         parsedString.append(f"{catNum}")
+
         self.operands = parsedString
         self.operations.setText(str("".join(self.operands)))
 
     @QtCore.Slot()
+    # resets display
     def all_clear(self):
         self.operands = []
         self.operations.setText('0')
