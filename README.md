@@ -1,1 +1,1 @@
-"# calculator-using-pyQT" 
+PySide6 required to run files
